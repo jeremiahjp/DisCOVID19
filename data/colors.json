@@ -1,0 +1,15 @@
+{
+    "main": "#2F3136",
+    "online": "#7BCBA7",
+    "offline": "#9EA5AF",
+    "confirmed": "#B10DC9",
+    "confirmedBackground": "#f1b7fa",
+    "infected": "#FFAA00",
+    "infectedBackground": "",
+    "deaths": "#FF2814",
+    "deathsBackground": "",
+    "recovered": "#17AC28",
+    "recoveredBackground": "",
+    "error": "#CC0000",
+    "errorSoft": " #FF0033"
+}
