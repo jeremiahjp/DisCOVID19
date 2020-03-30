@@ -3,13 +3,13 @@ const Discord = require("discord.js");
 const AsciiTable = require("ascii-table");
 
 module.exports = {
-    name: "state",
-    description: "Provides Coronavirus Disease (COVID-19) statistics on the provided state.",
-    usage: "<state to search>",
+    name: "province",
+    description: "Provides Coronavirus Disease (COVID-19) statistics on the provided province.",
+    usage: "<province to search>",
     args: true,
     async run(client, message, args) {
-        let stateUrl = `https://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/ncov_cases/FeatureServer/1/query?where=province_state='${args}'&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=Province_State%2C+Country_Region%2C+Last_Update%2C+Confirmed%2C+Recovered%2C+Deaths%2C+Active&returnGeometry=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=`;
-        const response = await fetch(stateUrl).then(r => r.json());
+        let provinceUrl = `https://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/ncov_cases/FeatureServer/1/query?where=province_state='${args}'&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=Province_State%2C+Country_Region%2C+Last_Update%2C+Confirmed%2C+Recovered%2C+Deaths%2C+Active&returnGeometry=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=`;
+        const response = await fetch(provinceUrl).then(r => r.json());
         if (!response.features.length) {
             const embed = new Discord.MessageEmbed()
             .setTitle('Nothing found!')
@@ -20,9 +20,9 @@ module.exports = {
             return;
         }
 
-        const stateAttributes = response.features[0].attributes;
+        const provinceAttributes = response.features[0].attributes;
         let asciiTable = new AsciiTable();
-        let readableLastUpdate = new Date(stateAttributes.Last_Update)
+        let readableLastUpdate = new Date(provinceAttributes.Last_Update)
         const dateOptions = {
             weekday: 'long',
             year: 'numeric',
@@ -37,11 +37,11 @@ module.exports = {
         };
         let readableDate = Intl.DateTimeFormat('en-US', dateOptions).format(readableLastUpdate);
         asciiTable
-            .setHeading(`${stateAttributes.Province_State}, ${stateAttributes.Country_Region}`, 'SARS CoV-2 Stats')
-            .addRow("Confirmed", `${stateAttributes.Confirmed}`)
-            .addRow("Deaths", `${stateAttributes.Deaths}`)
-            .addRow("Recovered", `${stateAttributes.Recovered}`)
-            .addRow("Active", `${stateAttributes.Active}`)
+            .setHeading(`${provinceAttributes.Province_State}, ${provinceAttributes.Country_Region}`, 'SARS CoV-2 Stats')
+            .addRow("Confirmed", `${provinceAttributes.Confirmed}`)
+            .addRow("Deaths", `${provinceAttributes.Deaths}`)
+            .addRow("Recovered", `${provinceAttributes.Recovered}`)
+            .addRow("Active", `${provinceAttributes.Active}`)
             .addRow("Last Updated", `${readableDate}`);
 
         const titleString = `Coronavirus COVID-19 Cases by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University (JHU)`;

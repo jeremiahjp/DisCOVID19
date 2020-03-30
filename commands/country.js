@@ -14,7 +14,7 @@ module.exports = {
         if (!response.features.length) {
             const embed = new Discord.MessageEmbed()
             .setTitle('Nothing found!')
-            .setDescription('```No Data found for this country.\n\nThe country does not exist, or was incorrected typed.\n```')
+            .setDescription('```No Data found for this country.\n\nThe country does not exist, or was incorrectly typed.\n```')
             .setColor(client.colors.error)
             .setFooter("Data source: https://coronavirus.jhu.edu/map.html");
             message.channel.send(embed);
