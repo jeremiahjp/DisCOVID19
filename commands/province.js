@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const Discord = require("discord.js");
 const AsciiTable = require("ascii-table");
+const timeAgo = require("timeago.js");
 
 module.exports = {
     name: "province",
@@ -21,28 +22,15 @@ module.exports = {
         }
 
         const provinceAttributes = response.features[0].attributes;
+        const timeSince = timeAgo.format(provinceAttributes.Last_Update);
         let asciiTable = new AsciiTable();
-        let readableLastUpdate = new Date(provinceAttributes.Last_Update)
-        const dateOptions = {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            dayPeriod: "short",
-            timeZone: 'UTC',
-            timeZoneName: 'short'
-        };
-        let readableDate = Intl.DateTimeFormat('en-US', dateOptions).format(readableLastUpdate);
         asciiTable
             .setHeading(`${provinceAttributes.Province_State}, ${provinceAttributes.Country_Region}`, 'SARS CoV-2 Stats')
             .addRow("Confirmed", `${provinceAttributes.Confirmed}`)
             .addRow("Deaths", `${provinceAttributes.Deaths}`)
             .addRow("Recovered", `${provinceAttributes.Recovered}`)
             .addRow("Active", `${provinceAttributes.Active}`)
-            .addRow("Last Updated", `${readableDate}`);
+            .addRow("Last Updated", `${timeSince}`);
 
         const titleString = `Coronavirus COVID-19 Cases by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University (JHU)`;
         const randomDecimalColor = Math.floor(Math.random() * 16777214+ 1);
