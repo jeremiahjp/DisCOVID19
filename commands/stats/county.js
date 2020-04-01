@@ -17,12 +17,9 @@ module.exports = {
             state = cityOrCounty.substring(cityOrCounty.indexOf(","));
             cityOrCounty = cityOrCounty.substring(0, cityOrCounty.indexOf(",")).trim();
             state = state.replace(",", "").trim();
-            console.log(cityOrCounty);
-            console.log(state);
             cityOrCountryURL = `https://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/ncov_cases_US/FeatureServer/0/query?where=admin2='${cityOrCounty}'+and+Province_State='${state}'&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=`;
         }
 
-        // let cityOrCountryURL = `https://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/ncov_cases_US/FeatureServer/0/query?where=admin2='${cityOrCounty}'+and+Province_State='${state}'&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=`;
         const response = await fetch(cityOrCountryURL).then(r => r.json());
 
         if (!response.features.length) {
@@ -47,9 +44,7 @@ module.exports = {
             return; 
         }
 
-        // If we have more than one county, we sort and provide the county with the highest 
         const countryAttributes = response.features[0].attributes;
-        console.log(countryAttributes);
         const timeSince = timeAgo.format(countryAttributes.Last_Update);
         let asciiTable = new AsciiTable();
         asciiTable
