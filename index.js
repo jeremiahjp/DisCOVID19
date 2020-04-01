@@ -10,26 +10,39 @@ const settings = require("./settings.js"); // Settings for prefix, and other inf
 client.settings = settings;
 
 fs.readdir("./events/", (err, files) => {
-  if (err) return console.error(err);
-  files.forEach(file => {
-    const event = require(`./events/${file}`);
-    let eventName = file.split(".")[0];
-    client.on(eventName, event.bind(null, client));
-  });
+    if (err) return console.error(err);
+    files.forEach(file => {
+        const event = require(`./events/${file}`);
+        let eventName = file.split(".")[0];
+        client.on(eventName, event.bind(null, client));
+    });
 });
 
 client.commands = new Enmap();
 client.colors = require("./data/colors.json");
 
-fs.readdir("./commands/", (err, files) => {
-  if (err) return console.error(err);
-  files.forEach(file => {
-    if (!file.endsWith(".js")) return;
-    let props = require(`./commands/${file}`);
-    let commandName = file.split(".")[0];
-    console.log(`Attempting to load command ${commandName}`);
-    client.commands.set(commandName, props);
-  });
-});
+const commands = fs.readdirSync("./commands/");
+
+try {
+    commands.forEach(async category => {
+        fs.readdir(`./commands/${category}/`, err => {
+            if (err) 
+                return console.error(err);
+            const init = async () => {
+                const commands = fs
+                    .readdirSync(`./commands/${category}`)
+                    .filter(file => file.endsWith(".js"));
+                for (const file of commands) {
+                    const command = require(`./commands/${category}/${file}`);
+                    console.log(`Attempting to load command ${command.name}`);
+                    client.commands.set(command.name, command);
+                }
+            };
+            init();
+        });
+    });
+} catch (error) {
+  console.log(error);
+}
 
 client.login(config.discordToken);
