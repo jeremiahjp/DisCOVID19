@@ -10,8 +10,20 @@ module.exports = {
     args: true,
     async run(client, message, args) {
         let country = args.join(" ");
+        country = encodeURIComponent(country);
+        country = country.replace(/'/g, '');
         let countryUrl = `https://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/ncov_cases/FeatureServer/2/query?where=Country_Region='${country}'&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=country_region%2C+Last_Update%2C+confirmed%2C+deaths%2C+recovered%2C+active&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=`;
         const response = await fetch(countryUrl).then(r => r.json());
+
+        if (response.error) {
+            const embed = new Discord.MessageEmbed()
+            .setTitle(`JHU responded with error code ${response.error.code}`)
+            .setDescription(`\`\`\`${response.error.message}\n\nLikely invalid characters in query.\`\`\``)
+            .setColor(client.colors.errorSoft)
+            .setFooter("Data source: https://coronavirus.jhu.edu/map.html");
+            message.channel.send(embed);
+            return;
+        }
 
         if (!response.features.length) {
             const embed = new Discord.MessageEmbed()

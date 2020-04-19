@@ -12,15 +12,29 @@ module.exports = {
         let cityOrCounty = args.join(" ");
         let cityOrCountyAndState = '';
         let state = '';
+        cityOrCounty = encodeURIComponent(cityOrCounty);
+        cityOrCounty = cityOrCounty.replace(/'/g, '');
         let cityOrCountryURL = `https://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/ncov_cases_US/FeatureServer/0/query?where=admin2='${cityOrCounty}'&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=`;
         if (cityOrCounty.includes(",")) {
             state = cityOrCounty.substring(cityOrCounty.indexOf(","));
             cityOrCounty = cityOrCounty.substring(0, cityOrCounty.indexOf(",")).trim();
             state = state.replace(",", "").trim();
+            state = encodeURIComponent(state);
+            state = state.replace(/'/g, '');
             cityOrCountryURL = `https://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/ncov_cases_US/FeatureServer/0/query?where=admin2='${cityOrCounty}'+and+Province_State='${state}'&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=`;
         }
 
         const response = await fetch(cityOrCountryURL).then(r => r.json());
+
+        if (response.error) {
+            const embed = new Discord.MessageEmbed()
+            .setTitle(`JHU responded with error code ${response.error.code}`)
+            .setDescription(`\`\`\`${response.error.message}\n\nLikely invalid characters in query.\`\`\``)
+            .setColor(client.colors.errorSoft)
+            .setFooter("Data source: https://coronavirus.jhu.edu/map.html");
+            message.channel.send(embed);
+            return;
+        }
 
         if (!response.features.length) {
             const embed = new Discord.MessageEmbed()

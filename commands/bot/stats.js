@@ -15,7 +15,10 @@ module.exports = {
     const created = client.user.createdAt;
     const version = client.settings.version;
     const servers = client.guilds.cache.size;
-    const members = client.guilds.cache.reduce((prev, guild) => prev + guild.memberCount, 0);
+
+    // Intentionally ignoring TOP.GG server, as its memberCount is inflating the count from servers that found the bot naturally
+    const members = client.guilds.cache.reduce((prev, guild) => {
+        return guild.id != '264445053596991498' ? prev + guild.memberCount : prev}, 0);
     const randomDecimalColor = Math.floor(Math.random() * 16777214+ 1);
 
     const statsEmbed = new Discord.MessageEmbed()
