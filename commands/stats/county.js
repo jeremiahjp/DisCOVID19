@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const Discord = require("discord.js");
 const AsciiTable = require("ascii-table");
 const timeAgo = require("timeago.js");
+const stateAbbreviations = require('states-abbreviations');
 
 module.exports = {
     name: "county",
@@ -10,9 +11,8 @@ module.exports = {
     args: true,
     async run(client, message, args) {
         let cityOrCounty = args.join(" ");
-        let cityOrCountyAndState = '';
         let state = '';
-        cityOrCounty = encodeURIComponent(cityOrCounty);
+        cityOrCounty = cityOrCounty.includes('county') ? cityOrCounty.replace('county', '') : cityOrCounty;
         cityOrCounty = cityOrCounty.replace(/'/g, '');
         let cityOrCountryURL = `https://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/ncov_cases_US/FeatureServer/0/query?where=admin2='${cityOrCounty}'&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=`;
         if (cityOrCounty.includes(",")) {
@@ -21,6 +21,7 @@ module.exports = {
             state = state.replace(",", "").trim();
             state = encodeURIComponent(state);
             state = state.replace(/'/g, '');
+            state = stateAbbreviations[state.toUpperCase()] ? stateAbbreviations[state.toUpperCase()] : state;
             cityOrCountryURL = `https://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/ncov_cases_US/FeatureServer/0/query?where=admin2='${cityOrCounty}'+and+Province_State='${state}'&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=`;
         }
 

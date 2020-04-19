@@ -16,17 +16,18 @@ module.exports = (client, message) => {
     // Grab the command data from the client.commands Enmap
     const cmd = client.commands.get(command);
 
-    // If that command doesn't exist, silently exit and do nothing
-    if (!cmd) {
-        return;
-    }
-
     // In the instance where someone provided usage was @bot as the prefix, we can use that.
     // NOT IMPLEMENTED
     const mentionPrefix = new RegExp(`^<@!?${client.user.id}>( |)$`);
 
     let prefix = client.settings.prefix;
 
+    // If that command doesn't exist, silently exit and do nothing
+    if (!cmd) {
+        return message.channel.send(
+            `\`\`\`Unrecognized command.\nCheck for typos and try again.\n\nFor help try: ${prefix} help\`\`\``
+        );
+    }
     // Check cooldowns. 5 second default cooldown
     if (!cooldowns.has(cmd.name)) {
         cooldowns.set(cmd.name, new Discord.Collection());

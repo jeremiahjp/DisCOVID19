@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const AsciiTable = require("ascii-table");
 const timeAgo = require("timeago.js");
 const querystring = require('querystring');
+const stateAbbreviations = require('states-abbreviations');
 
 module.exports = {
     name: "state",
@@ -13,6 +14,7 @@ module.exports = {
         let state = args.join(" ");
         state = encodeURIComponent(state);
         state = state.replace(/'/g, '');
+        state = stateAbbreviations[state.toUpperCase()] ? stateAbbreviations[state.toUpperCase()] : state;
         let stateUrl = `https://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/ncov_cases/FeatureServer/1/query?where=province_state='${state}'&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=Province_State%2C+Country_Region%2C+Last_Update%2C+Confirmed%2C+Recovered%2C+Deaths%2C+Active&returnGeometry=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pjson&token=`;
         const response = await fetch(stateUrl).then(r => r.json());
         
