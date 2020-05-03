@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const Discord = require("discord.js");
 const AsciiTable = require("ascii-table");
 const timeAgo = require("timeago.js");
+const decimalFormat = require("../../utils/decimalFormat");
 
 module.exports = {
     name: "province",
@@ -28,10 +29,10 @@ module.exports = {
         let asciiTable = new AsciiTable();
         asciiTable
             .setHeading(`${provinceAttributes.Province_State}, ${provinceAttributes.Country_Region}`, 'SARS CoV-2 Stats')
-            .addRow("Confirmed", `${provinceAttributes.Confirmed}`)
-            .addRow("Deaths", `${provinceAttributes.Deaths}`)
-            .addRow("Recovered", `${provinceAttributes.Recovered}`)
-            .addRow("Active", `${provinceAttributes.Active}`)
+            .addRow("Confirmed", decimalFormat(`${provinceAttributes.Confirmed}`))
+            .addRow("Deaths", decimalFormat(`${provinceAttributes.Deaths}`))
+            .addRow("Recovered", decimalFormat(`${provinceAttributes.Recovered}`))
+            .addRow("Active", decimalFormat(`${provinceAttributes.Active}`))
             .addRow("Last Updated", `${timeSince}`);
 
         const titleString = `Coronavirus COVID-19 Cases by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University (JHU)`;

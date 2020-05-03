@@ -11,7 +11,7 @@ module.exports = (client, message) => {
 
     setInterval(() => {
         dbl.postStats(client.guilds.cache.size);
-    }, 60000);
+    }, 1800000);
 
     dbl.on('posted', () => {
         console.log('Top.gg server count posted successfully');
