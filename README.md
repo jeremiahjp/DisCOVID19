@@ -1,3 +1,6 @@
+[![Discord Bots](https://top.gg/api/widget/status/693300458055401556.svg?noavatar=true)](https://top.gg/bot/693300458055401556)
+[![Discord Bots](https://top.gg/api/widget/servers/693300458055401556.svg?noavatar=true)](https://top.gg/bot/693300458055401556)
+
 # DisCOVID19
 A bot for Discord that utilizes John Hopkins rest service.
 
