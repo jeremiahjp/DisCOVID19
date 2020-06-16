@@ -10,8 +10,11 @@ module.exports = (client, message) => {
     const dbl = new DBL(config.dblToken, client);
 
     setInterval(() => {
-        dbl.postStats(client.guilds.cache.size);
-    }, 1800000);
+        dbl.postStats(client.guilds.cache.size)
+        .catch((reason) => {
+            console.log(`Some server error occured: ${reason}`);
+        });
+    }, 60000);
 
     dbl.on('posted', () => {
         console.log('Top.gg server count posted successfully');

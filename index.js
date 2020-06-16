@@ -22,7 +22,7 @@ client.commands = new Enmap();
 client.colors = require("./data/colors.json");
 
 const commands = fs.readdirSync("./commands/");
-
+console.log(`Running bot on ` + new Date().toString());
 try {
     commands.forEach(async category => {
         fs.readdir(`./commands/${category}/`, err => {
